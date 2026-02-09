@@ -9,10 +9,7 @@ interface HeaderProps {
 const pageTitles: Record<string, string> = {
     "/": "Dashboard",
     "/commandes": "Orders",
-    "/produits": "Products",
-    "/clients": "Customers",
-    "/analytics": "Analytics",
-    "/parametres": "Parametres",
+    "/produits": "Products"
 };
 
 export function Header({ onMenuClick }: HeaderProps) {
@@ -31,7 +28,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             <div className="flex justify-between items-center p-4 bg-white border-b border-border">
                 {/* LEFT */}
                 <div className="flex items-center gap-3">
-                    <ChartNoAxesGantt className="w-6 h-6 md:hidden" onClick={onMenuClick} />
+                    <ChartNoAxesGantt className="w-6 h-6 lg:hidden" onClick={onMenuClick} />
                     <span className="text-lg font-semibold">{title}</span>
                 </div>
 

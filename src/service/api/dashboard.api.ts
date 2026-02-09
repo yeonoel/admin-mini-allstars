@@ -1,11 +1,11 @@
 
+import type { DashboardStatsDto } from '@/types/dashboard.types';
 import apiClient from './clients';
-import type { DashboardStats } from '../../types/dashboard.types';
 import type { ProductStats } from '@/types/products.types';
 
 export const dashboardApi = {
-  getOverviewStats: async (): Promise<DashboardStats> => {
-    const { data } = await apiClient.get<DashboardStats>('/admin/overview');
+  getOverviewStats: async (): Promise<DashboardStatsDto> => {
+    const { data } = await apiClient.get<DashboardStatsDto>('/admin/overview');
     return data;
   },
 
@@ -14,3 +14,5 @@ export const dashboardApi = {
     return data;
   }
 };
+
+

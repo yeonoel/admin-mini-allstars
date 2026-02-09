@@ -1,128 +1,89 @@
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { formatPrice } from "@/lib/utils";
+import type { DashboardStatsDto } from "@/types/dashboard.types";
+import { DollarSign, TrendingUp, ShoppingBag, AlertCircle } from "lucide-react";
 
-import { useOverview } from '@/hooks/useOverview';
-import { StatCard } from '@/components/features/StatCard';
-import { TrendingUp, ShoppingCart, Package, Users } from 'lucide-react';
-import { formatPrice } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { RevenueChart } from '@/components/features/overview/RevenueChart';
-import { SalesCategoryChart } from '@/components/features/overview/SalesCategoryChart';
-import { RecentOrders } from '@/components/features/overview/RecentOrders';
-import { TopProducts } from '@/components/features/overview/TopProducts';
+interface StatCardProps {
+    title: string;
+    value: string;
+    icon: React.ReactNode;
+    iconBgColor: string;
+}
 
-export default function Overview() {
-    const { data, isLoading, error, refetch } = useOverview();
-    // Loading state
-    if (isLoading) {
-        return (
-            <div className="space-y-6">
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-
-                {/* Stats Cards Skeleton */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                    {[1, 2, 3, 4].map((i) => (
-                        <Skeleton key={i} className="h-32" />
-                    ))}
+const StatCard = ({ title, value, icon, iconBgColor }: StatCardProps) => {
+    return (
+        <Card className="border-gray-200">
+            <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-600 mb-2">{title}</p>
+                        <p className="text-2xl font-bold text-gray-900">{value}</p>
+                    </div>
+                    <div className={`w-12 h-12 rounded-lg ${iconBgColor} flex items-center justify-center`}>
+                        {icon}
+                    </div>
                 </div>
+            </CardContent>
+        </Card>
+    );
+};
 
-                {/* Charts Skeleton */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Skeleton className="h-96" />
-                    <Skeleton className="h-96" />
-                </div>
+export function Overview() {
+    const stats: DashboardStatsDto = {
+        salesToday: 145500,
+        salesThisMonth: 3245000,
+        totalRevenue: 12500000,
+        pendingDeliveries: 12,
+        outOfStockProducts: 3
+    };
 
-                {/* Lists Skeleton */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <Skeleton className="h-96" />
-                    <Skeleton className="h-96" />
-                </div>
-            </div>
-        );
-    }
-    // Error state
-    if (error) {
-        return (
-            <div>
-                <Alert variant="destructive">
-                    <AlertDescription>
-                        Erreur lors du chargement des statistiques.
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => refetch()}
-                            className="ml-4"
-                        >
-                            Réessayer
-                        </Button>
-                    </AlertDescription>
-                </Alert>
-            </div>
-        );
-    }
-
-    if (!data) return null;
     return (
         <div className="space-y-6">
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                <StatCard
-                    title="Chiffre d'affaires"
-                    value={formatPrice(data.totalRevenue)}
-                    icon={TrendingUp}
-                    iconBg="bg-green-100"
-                    iconColor="text-green-600"
-                    change={data.revenueChange}
-                />
+            {/* Page Title */}
+            <div>
+                <p className="text-sm text-gray-500">Vue d'ensemble de votre activité</p>
+            </div>
 
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
-                    title="Commandes"
-                    value={data.totalOrders.toLocaleString('fr-FR')}
-                    icon={ShoppingCart}
-                    iconBg="bg-blue-100"
-                    iconColor="text-blue-600"
-                    change={data.ordersChange}
+                    title="Ventes du jour"
+                    value={formatPrice(stats.salesToday)}
+                    icon={<DollarSign className="w-6 h-6 text-white" />}
+                    iconBgColor="bg-green-500"
                 />
-
                 <StatCard
-                    title="Produits"
-                    value={data.totalProducts.toLocaleString('fr-FR')}
-                    icon={Package}
-                    iconBg="bg-purple-100"
-                    iconColor="text-purple-600"
-                    change={data.productsChange}
+                    title="Ventes du mois"
+                    value={formatPrice(stats.salesThisMonth)}
+                    icon={<TrendingUp className="w-6 h-6 text-white" />}
+                    iconBgColor="bg-blue-600"
                 />
-
                 <StatCard
-                    title="Clients"
-                    value={data.totalCustomers.toLocaleString('fr-FR')}
-                    icon={Users}
-                    iconBg="bg-orange-100"
-                    iconColor="text-orange-600"
-                    change={data.customersChange}
+                    title="Commandes à livrer"
+                    value={stats.pendingDeliveries.toString()}
+                    icon={<ShoppingBag className="w-6 h-6 text-white" />}
+                    iconBgColor="bg-orange-500"
+                />
+                <StatCard
+                    title="Produits en rupture"
+                    value={stats.outOfStockProducts.toString()}
+                    icon={<AlertCircle className="w-6 h-6 text-white" />}
+                    iconBgColor="bg-red-500"
                 />
             </div>
 
-            {/* Section supplémentaire (optionnelle) */}
-            {data.lowStockProducts.length > 0 && (
-                <Alert className="mt-6">
-                    <AlertDescription>
-                        ⚠️ <strong>{data.lowStockProducts.length} produit(s)</strong> en stock faible
-                    </AlertDescription>
-                </Alert>
-            )}
-
-            {/* Charts - 2 colonnes */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RevenueChart data={data.revenueByMonth} />
-                <SalesCategoryChart data={data.topProducts} />
-            </div>
-
-            {/* Recent Orders & Top Products - 2 colonnes */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <RecentOrders data={data.recentOrders} />
-                <TopProducts data={data.topProducts} limit={5} />
-            </div>
+            {/* Performance Alert */}
+            <Alert className="bg-blue-50 border-blue-200">
+                <TrendingUp className="h-5 w-5 text-blue-600" />
+                <AlertDescription className="ml-2">
+                    <span className="font-semibold text-blue-900">Excellente performance !</span>
+                    <br />
+                    <span className="text-blue-700">
+                        Vos ventes sont en hausse de 23% par rapport au mois dernier. Continuez comme ça !
+                    </span>
+                </AlertDescription>
+            </Alert>
         </div>
     );
 }

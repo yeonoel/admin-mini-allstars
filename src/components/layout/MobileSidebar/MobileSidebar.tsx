@@ -17,7 +17,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
         "flex items-center gap-2 p-2 rounded-lg text-sm hover:bg-gray-100 focus:bg-gray-900 focus:text-white";
 
     return (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-50 flex lg:hidden">
             {/* Overlay sombre */}
             <div
                 className="fixed inset-0 bg-black/50"
@@ -38,7 +38,7 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                 <nav className="space-y-2">
                     <NavLink to="/" className={linkClass} onClick={onClose}>
                         <PanelsTopLeft className="w-3.5 h-3.5" />
-                        <span>Dashboard</span>
+                        <span>Tableau de bord </span>
                     </NavLink>
 
                     <NavLink to="/commandes" className={linkClass} onClick={onClose}>
@@ -49,21 +49,6 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                     <NavLink to="/produits" className={linkClass} onClick={onClose}>
                         <ShoppingBasket className="w-3.5 h-3.5" />
                         <span>Produits</span>
-                    </NavLink>
-
-                    <NavLink to="/clients" className={linkClass} onClick={onClose}>
-                        <Users className="w-3.5 h-3.5" />
-                        <span>Clients</span>
-                    </NavLink>
-
-                    <NavLink to="/analytics" className={linkClass} onClick={onClose}>
-                        <ChartColumn className="w-3.5 h-3.5" />
-                        <span>Analytics</span>
-                    </NavLink>
-
-                    <NavLink to="/parametres" className={linkClass} onClick={onClose}>
-                        <SlidersHorizontal className="w-3.5 h-3.5" />
-                        <span>Parametres</span>
                     </NavLink>
                 </nav>
                 <div className="border-t border-border p-2 mt-auto">

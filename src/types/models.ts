@@ -1,7 +1,6 @@
 export type UserRole = "admin" | "customer";
 export type ProductStatus = "active" | "draft" | "archived";
 export type CustomerStatus = "active" | "blocked";
-export type OrderStatus = "pending" | "paid" | "shipped" | "delivered" | "cancelled";
 export type PaymentMethod = "card" | "mobile_money" | "cash_on_delivery";
 
 export interface User {
@@ -56,13 +55,3 @@ export interface OrderItem {
   price: number;
 }
 
-export interface Order {
-  id: string;
-  orderId: string; // Human readable ID
-  customer: Customer;
-  items: OrderItem[];
-  amount: number;
-  status: OrderStatus;
-  payment: PaymentMethod;
-  date: string;
-}
