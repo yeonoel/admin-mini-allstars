@@ -1,42 +1,49 @@
+import { StatCard } from "@/components/features/StatCard";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useOverview } from "@/hooks/useOverview";
 import { formatPrice } from "@/lib/utils";
-import type { DashboardStatsDto } from "@/types/dashboard.types";
-import { DollarSign, TrendingUp, ShoppingBag, AlertCircle } from "lucide-react";
+import { DollarSign, TrendingUp, ShoppingBag, AlertCircle, TrendingDown } from "lucide-react";
 
-interface StatCardProps {
-    title: string;
-    value: string;
-    icon: React.ReactNode;
-    iconBgColor: string;
-}
 
-const StatCard = ({ title, value, icon, iconBgColor }: StatCardProps) => {
-    return (
-        <Card className="border-gray-200">
-            <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-600 mb-2">{title}</p>
-                        <p className="text-2xl font-bold text-gray-900">{value}</p>
-                    </div>
-                    <div className={`w-12 h-12 rounded-lg ${iconBgColor} flex items-center justify-center`}>
-                        {icon}
-                    </div>
+export default function Overview() {
+    const { data, isLoading, error, refetch } = useOverview();
+    if (isLoading) {
+        return (
+            <div className="space-y-6">
+                {/* Stats Cards Skeleton */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((i) => (
+                        <Skeleton key={i} className="h-32" />
+                    ))}
                 </div>
-            </CardContent>
-        </Card>
-    );
-};
+            </div>
+        );
+    }
+    // Error state
+    if (error) {
+        return (
+            <div>
+                <Alert variant="destructive">
+                    <AlertDescription>
+                        Erreur lors du chargement des statistiques.
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => refetch()}
+                            className="ml-4"
+                        >
+                            Réessayer
+                        </Button>
+                    </AlertDescription>
+                </Alert>
+            </div>
+        );
+    }
 
-export function Overview() {
-    const stats: DashboardStatsDto = {
-        salesToday: 145500,
-        salesThisMonth: 3245000,
-        totalRevenue: 12500000,
-        pendingDeliveries: 12,
-        outOfStockProducts: 3
-    };
+    if (!data) return null;
+    const stats = data;
 
     return (
         <div className="space-y-6">
@@ -74,16 +81,45 @@ export function Overview() {
             </div>
 
             {/* Performance Alert */}
-            <Alert className="bg-blue-50 border-blue-200">
-                <TrendingUp className="h-5 w-5 text-blue-600" />
+            <Alert className={`${stats.revenueChange.isPositive
+                ? "bg-blue-50 border-blue-200"
+                : "bg-red-50 border-red-200"
+                }`}
+            >
+                {stats.revenueChange.isPositive ? (
+                    <TrendingUp className="w-6 h-6 text-blue-900" />
+                ) : (
+                    <TrendingDown className="w-6 h-6 text-red-900" />
+                )}
+
                 <AlertDescription className="ml-2">
-                    <span className="font-semibold text-blue-900">Excellente performance !</span>
+                    <span
+                        className={`font-semibold ${stats.revenueChange.isPositive
+                            ? "text-blue-900"
+                            : "text-red-900"
+                            }`}
+                    >
+                        {stats.revenueChange.isPositive
+                            ? "Excellente performance !"
+                            : "Baisse des performances"}
+                    </span>
+
                     <br />
-                    <span className="text-blue-700">
-                        Vos ventes sont en hausse de 23% par rapport au mois dernier. Continuez comme ça !
+
+                    <span
+                        className={`${stats.revenueChange.isPositive
+                            ? "text-blue-700"
+                            : "text-red-700"
+                            }`}
+                    >
+                        Vos ventes sont{" "}
+                        {stats.revenueChange.isPositive ? "en hausse" : "en baisse"} de{" "}
+                        <strong>{stats.revenueChange.percentage} %</strong>{" "}
+                        {stats.revenueChange.label}.
                     </span>
                 </AlertDescription>
             </Alert>
+
         </div>
     );
 }

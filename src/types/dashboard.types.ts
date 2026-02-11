@@ -56,6 +56,13 @@ export interface LowStockProduct {
   lowStockProducts: LowStockProduct[];
 } */
 
+export interface PercentageChangeDto {
+  percentage: number;      // +12.5 ou -5.3
+  isPositive: boolean;     // true si augmentation
+  label: string;           // "vs mois dernier"
+}
+
+
 // Dashboard Types
 export interface DashboardStatsDto {
     salesToday: number;
@@ -63,6 +70,7 @@ export interface DashboardStatsDto {
     totalRevenue: number;
     pendingDeliveries: number;
     outOfStockProducts: number;
+    revenueChange: PercentageChangeDto;
 }
 
 // Product Types

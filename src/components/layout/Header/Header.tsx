@@ -7,9 +7,9 @@ interface HeaderProps {
 }
 
 const pageTitles: Record<string, string> = {
-    "/": "Dashboard",
-    "/commandes": "Orders",
-    "/produits": "Products"
+    "/": "Tableau de bord",
+    "/commandes": "Commandes",
+    "/produits": "Produits"
 };
 
 export function Header({ onMenuClick }: HeaderProps) {

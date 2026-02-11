@@ -7,8 +7,8 @@ import { PrivateRoute } from "./components/common/PrivateRoutes/PrivateRoute"
 import Login from "./pages/Login/Login"
 import { Toaster } from "react-hot-toast"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Overview } from "./pages/overview/Overview"
 import { Products } from "./pages/products/Products"
+import Overview from "./pages/overview/Overview"
 
 const queryClient = new QueryClient();
 function App() {

@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Plus, Edit, Trash2, ChevronDown, ChevronRight, X } from "lucide-react";
+import { Plus, Edit, Trash2, ChevronDown, ChevronRight, Package, DollarSign, Layers, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -109,7 +111,7 @@ export function Products() {
         const [images, setImages] = useState<string[]>([]);
 
         return (
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Ajouter un produit</DialogTitle>
                     <p className="text-sm text-gray-500">Étape 1/2 : Informations de base du produit</p>
@@ -121,7 +123,7 @@ export function Products() {
                         <Input id="name" placeholder="Ex: Classic High Top" />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <Label htmlFor="category">Catégorie *</Label>
                             <Input id="category" placeholder="High Tops" />
@@ -161,7 +163,7 @@ export function Products() {
                         />
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-4">
+                    <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
                         <Button variant="outline" onClick={() => setIsAddProductOpen(false)}>
                             Annuler
                         </Button>
@@ -204,7 +206,7 @@ export function Products() {
                     <p className="text-xs text-gray-500 mt-1">Généré automatiquement si laissé vide</p>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
                     <Button variant="outline" onClick={() => setIsAddVariantOpen(false)}>
                         Annuler
                     </Button>
@@ -245,7 +247,7 @@ export function Products() {
                     <Input id="edit-sku" defaultValue="CLA-BLA-9" />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
                     <Button variant="outline" onClick={() => setIsEditVariantOpen(false)}>
                         Annuler
                     </Button>
@@ -266,13 +268,13 @@ export function Products() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <p className="text-sm text-gray-500">{products.length} produit(s) · 1 en rupture</p>
                 </div>
                 <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
                     <DialogTrigger asChild>
-                        <Button className="bg-black text-white hover:bg-gray-800 gap-2">
+                        <Button className="bg-black text-white hover:bg-gray-800 gap-2 w-full sm:w-auto">
                             <Plus className="w-4 h-4" />
                             Ajouter un produit
                         </Button>
@@ -281,8 +283,156 @@ export function Products() {
                 </Dialog>
             </div>
 
-            {/* Products Table */}
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            {/* MOBILE: Vue en cartes */}
+            <div className="lg:hidden space-y-4">
+                {products.map((product) => (
+                    <Card key={product.id}>
+                        <CardContent className="p-4">
+                            <div className="space-y-4">
+                                {/* Image et infos principales */}
+                                <div className="flex gap-3">
+                                    <img
+                                        src={product.images[0]?.url}
+                                        alt={product.name}
+                                        className="w-20 h-20 rounded-lg object-cover border border-gray-200 flex-shrink-0"
+                                    />
+
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="font-semibold text-base mb-1">
+                                            {product.name}
+                                        </h3>
+                                        <p className="text-sm text-gray-600 line-clamp-2">
+                                            {product.shortDescription}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Métriques en grille */}
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="flex items-center gap-2">
+                                        <DollarSign className="h-4 w-4 text-gray-400" />
+                                        <div>
+                                            <p className="text-xs text-gray-500">Prix</p>
+                                            <p className="font-semibold">{formatCurrency(product.price)}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Package className="h-4 w-4 text-gray-400" />
+                                        <div>
+                                            <p className="text-xs text-gray-500">Stock</p>
+                                            <p className={`font-semibold ${product.stockQuantity === 0 ? 'text-red-600' : ''}`}>
+                                                {product.stockQuantity}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Tag className="h-4 w-4 text-gray-400" />
+                                        <div>
+                                            <p className="text-xs text-gray-500">Catégorie</p>
+                                            <Badge variant="secondary" className="text-xs mt-1">
+                                                {product.category?.name || "Aucune"}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Layers className="h-4 w-4 text-gray-400" />
+                                        <div>
+                                            <p className="text-xs text-gray-500">Variantes</p>
+                                            <Badge variant="outline" className="text-xs mt-1">
+                                                {product.variants.length}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Boutons d'action */}
+                                <div className="flex gap-2 pt-2 border-t">
+                                    <Dialog open={isAddVariantOpen} onOpenChange={setIsAddVariantOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="flex-1 gap-2"
+                                                onClick={() => setSelectedProduct(product.name)}
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                                Variante
+                                            </Button>
+                                        </DialogTrigger>
+                                        <AddVariantDialog />
+                                    </Dialog>
+                                    <Button variant="outline" size="sm">
+                                        <Edit className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setIsDeleteDialogOpen(true)}
+                                    >
+                                        <Trash2 className="w-4 h-4 text-red-600" />
+                                    </Button>
+                                </div>
+
+                                {/* Variantes expandables */}
+                                {product.variants.length > 0 && (
+                                    <div className="border-t pt-3">
+                                        <button
+                                            onClick={() => toggleProduct(product.id)}
+                                            className="flex items-center justify-between w-full text-sm font-medium text-gray-700 hover:text-gray-900"
+                                        >
+                                            <span>Voir les variantes ({product.variants.length})</span>
+                                            {expandedProducts.has(product.id) ? (
+                                                <ChevronDown className="w-4 h-4" />
+                                            ) : (
+                                                <ChevronRight className="w-4 h-4" />
+                                            )}
+                                        </button>
+
+                                        {expandedProducts.has(product.id) && (
+                                            <div className="mt-3 space-y-2">
+                                                {product.variants.map((variant) => (
+                                                    <div key={variant.id} className="bg-gray-50 rounded-lg p-3 space-y-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="flex gap-2">
+                                                                <Badge className="text-xs">{variant.color}</Badge>
+                                                                <Badge variant="outline" className="text-xs">{variant.size}</Badge>
+                                                            </div>
+                                                            <div className="flex gap-1">
+                                                                <Dialog open={isEditVariantOpen} onOpenChange={setIsEditVariantOpen}>
+                                                                    <DialogTrigger asChild>
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            onClick={() => setSelectedVariant(variant)}
+                                                                        >
+                                                                            <Edit className="w-3 h-3" />
+                                                                        </Button>
+                                                                    </DialogTrigger>
+                                                                    <EditVariantDialog />
+                                                                </Dialog>
+                                                                <Button variant="ghost" size="sm">
+                                                                    <Trash2 className="w-3 h-3 text-red-600" />
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center justify-between text-xs">
+                                                            <span className="text-gray-500 font-mono">{variant.sku}</span>
+                                                            <span className="font-semibold">Stock: {variant.stockQuantity}</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+
+            {/* DESKTOP: Vue tableau (votre code original) */}
+            <div className="hidden lg:block bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <table className="w-full">
                     <thead className="bg-gray-50 border-b border-gray-200">
                         <tr>
