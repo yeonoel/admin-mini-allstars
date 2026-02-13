@@ -7,8 +7,9 @@ import { PrivateRoute } from "./components/common/PrivateRoutes/PrivateRoute"
 import Login from "./pages/Login/Login"
 import { Toaster } from "react-hot-toast"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { Products } from "./pages/products/Products"
 import Overview from "./pages/overview/Overview"
+import Products from "./pages/products/Products"
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 function App() {
@@ -31,6 +32,7 @@ function App() {
           </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
 
   )

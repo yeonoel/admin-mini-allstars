@@ -1,7 +1,7 @@
 
 import type { DashboardStatsDto } from '@/types/dashboard.types';
 import apiClient from './clients';
-import type { ProductStats } from '@/types/products.types';
+import type { ProductStats } from '@/types/product.types';
 
 export const dashboardApi = {
   getOverviewStats: async (): Promise<DashboardStatsDto> => {
