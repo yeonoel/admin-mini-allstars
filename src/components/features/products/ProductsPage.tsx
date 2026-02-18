@@ -1,16 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-    Plus,
-    Edit,
-    Trash2,
-    ChevronDown,
-    ChevronRight,
-    Package,
-    DollarSign,
-    Layers,
-    Loader2,
-    AlertCircle,
-} from 'lucide-react';
+import { Plus, Edit, Trash2, ChevronDown, ChevronRight, Package, DollarSign, Layers, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +22,7 @@ import { ProductSearch } from './ProductSearch';
 
 import { useProducts, useDeleteProduct, useDeleteVariant } from '@/hooks/useProducts';
 import type { Product, ProductVariant } from '@/types/product.types';
+import { formatPrice } from '@/lib/utils';
 
 export function ProductsPage() {
     // États pour les dialogs
@@ -96,16 +86,6 @@ export function ProductsPage() {
             newExpanded.add(productId);
         }
         setExpandedProducts(newExpanded);
-    };
-
-    const formatCurrency = (amount: string | number) => {
-        const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-        return (
-            new Intl.NumberFormat('fr-FR', {
-                style: 'decimal',
-                minimumFractionDigits: 0,
-            }).format(numAmount) + ' FCFA'
-        );
     };
 
     const handleDeleteProduct = async () => {
@@ -220,7 +200,7 @@ export function ProductsPage() {
                                         <DollarSign className="h-4 w-4 text-gray-400" />
                                         <div>
                                             <p className="text-xs text-gray-500">Prix</p>
-                                            <p className="font-semibold">{formatCurrency(product.price)}</p>
+                                            <p className="font-semibold">{formatPrice(product.price)}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -401,7 +381,7 @@ export function ProductsPage() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className="font-semibold text-gray-900">
-                                            {formatCurrency(product.price)}
+                                            {formatPrice(product.price)}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">

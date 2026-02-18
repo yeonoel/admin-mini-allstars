@@ -29,8 +29,8 @@ export function OrdersError({ error, onRetry }: OrdersErrorProps) {
         },
         server: {
             icon: Server,
-            title: "Erreur du serveur",
-            description: "Le serveur rencontre des difficultés. Veuillez réessayer dans quelques instants.",
+            title: "Erreur",
+            description: "Veuillez réessayer dans quelques instants.",
             color: "text-red-600",
             bgColor: "bg-red-50",
             borderColor: "border-red-200"
