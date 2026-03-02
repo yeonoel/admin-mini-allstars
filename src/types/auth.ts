@@ -1,8 +1,11 @@
+import type { UserRole } from "./models";
+
 export interface AuthUser {
   id: string;
   firstName: string;
-  lastName: string;
-  email: string;
+  lastName?: string;
+  role?: UserRole;
+  slugStore?: string;
 }
 
 export interface AuthContextType {

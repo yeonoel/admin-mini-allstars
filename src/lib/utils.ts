@@ -45,3 +45,26 @@ export const formatDate = (date: string | Date): string => {
 export const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('fr-FR').format(num);
 };
+
+export function normalizePhone(phone: string): string {
+  let cleaned = phone.replace(/\s+/g, "");
+
+  if (cleaned.startsWith("0")) {
+    return "+2250" + cleaned.slice(1);
+  }
+
+  if (cleaned.startsWith("225")) {
+    return "+" + cleaned;
+  }
+
+  if (!cleaned.startsWith("+")) {
+    return "+225" + cleaned;
+  }
+
+  return cleaned;
+}
+
+export function getCurrentUser() {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+}

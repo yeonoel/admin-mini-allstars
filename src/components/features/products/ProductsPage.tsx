@@ -90,14 +90,19 @@ export function ProductsPage() {
 
     const handleDeleteProduct = async () => {
         if (!selectedProduct) return;
-        await deleteProduct.mutateAsync(selectedProduct.id);
-        setIsDeleteProductDialogOpen(false);
-        setSelectedProduct(null);
+        try {
+            await deleteProduct.mutate(selectedProduct.id);
+            setIsDeleteProductDialogOpen(false);
+            setSelectedProduct(null);
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
     };
 
     const handleDeleteVariant = async () => {
+        console.log('selectedVariant', selectedVariant);
         if (!selectedVariant) return;
-        await deleteVariant.mutateAsync(selectedVariant.id);
+        await deleteVariant.mutate({ id: selectedVariant.id, productId: selectedVariant.productId });
         setIsDeleteVariantDialogOpen(false);
         setSelectedVariant(null);
     };
@@ -497,6 +502,7 @@ export function ProductsPage() {
                                                                                 variant="ghost"
                                                                                 size="sm"
                                                                                 onClick={() => {
+                                                                                    setSelectedProduct(product);
                                                                                     setSelectedVariant(variant);
                                                                                     setIsDeleteVariantDialogOpen(true);
                                                                                 }}
@@ -544,6 +550,7 @@ export function ProductsPage() {
                     onOpenChange={setIsEditVariantOpen}
                     variant={selectedVariant}
                     productName={selectedProduct.name}
+                    productId={selectedProduct.id}
                 />
             )}
 

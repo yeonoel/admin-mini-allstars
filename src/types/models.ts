@@ -1,13 +1,15 @@
-export type UserRole = "admin" | "customer";
+export type UserRole = "seller" | "super_admin" | "customer";
 export type ProductStatus = "active" | "draft" | "archived";
 export type CustomerStatus = "active" | "blocked";
 export type PaymentMethod = "card" | "mobile_money" | "cash_on_delivery";
 
 export interface User {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
+  id: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  role?: UserRole;
+  slugStore?: string;
 }
 
 
@@ -19,7 +21,7 @@ export interface ProductImage {
 
 export interface ProductVariant {
   id: string;
-  name: string;         
+  name: string;
   sku?: string;
   price: number;
   stock: number;

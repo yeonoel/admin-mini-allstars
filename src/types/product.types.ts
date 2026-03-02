@@ -63,6 +63,7 @@ export interface ProductImage {
 }
 
 export interface ProductVariant {
+  productId: string;
   id: string;
   name: string;
   sku: string;

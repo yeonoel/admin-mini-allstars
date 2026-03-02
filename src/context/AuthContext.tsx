@@ -36,22 +36,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     }, []);
 
-    const login = async (email: string, password: string) => {
+    const login = async (phone: string, password: string) => {
         setLoading(true);
         setError(null);
         try {
-            const res = await loginApi(email, password);
+            const res = await loginApi(phone, password);
             setToken(res.token);
             setUser(res.data);
             setIsAuthenticated(true);
             localStorage.setItem('token', res.token);
             localStorage.setItem('user', JSON.stringify(res.data));
+            const slugStore = res?.data?.slugStore
             if (res.success) {
-                navigate('/');
+                switch (res.data.role) {
+                    case 'seller':
+                        navigate(`/dashboard/${slugStore}/overview`);
+                        break;
+                    case 'super_admin':
+                        navigate('/admin');
+                        break;
+                    default:
+                        navigate('/');
+                }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setError('Email ou mot de passe incorrect');
+            setError(error.message ?? 'Connection échoué');
         } finally {
             setLoading(false);
         }

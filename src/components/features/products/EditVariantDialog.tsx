@@ -13,9 +13,10 @@ interface EditVariantDialogProps {
     onOpenChange: (open: boolean) => void;
     variant: ProductVariant | null;
     productName: string;
+    productId: string;
 }
 
-export function EditVariantDialog({ open, onOpenChange, variant, productName, }: EditVariantDialogProps) {
+export function EditVariantDialog({ open, onOpenChange, variant, productName, productId }: EditVariantDialogProps) {
     const [formData, setFormData] = useState({
         color: '',
         size: '',
@@ -62,6 +63,7 @@ export function EditVariantDialog({ open, onOpenChange, variant, productName, }:
         try {
             await updateVariant.mutateAsync({
                 id: variant.id,
+                productId,
                 data: {
                     name: `${formData.color} - ${formData.size}`,
                     color: formData.color,

@@ -2,18 +2,19 @@ import apiClient from './clients';
 import type { ApiResponse, Product, CreateProductDto, CreateVariantDto, ProductVariant } from '@/types/product.types';
 
 export const productsApi = {
+
   // Produits
-  getAll: async (params?: { page?: number; limit?: number; search?: string }) => {
-    const { data } = await apiClient.get<ApiResponse<Product[]>>('/products', { params });
+  getAll: async (params?: { page?: number; limit?: number; search?: string }, slugStore?: string) => {
+    const { data } = await apiClient.get<ApiResponse<Product[]>>(`/${slugStore}/products`, { params });
     return data; // ✅ Retourne { success, data, meta }
   },
 
-  getById: async (id: string) => {
-    const { data } = await apiClient.get<ApiResponse<Product>>(`/products/${id}`);
+  getById: async (id: string, slugStore?: string) => {
+    const { data } = await apiClient.get<ApiResponse<Product>>(`/${slugStore}/products/${id}`);
     return data.data; // OK - pour un produit unique
   },
 
-  create: async (productData: CreateProductDto) => {
+  create: async (productData: CreateProductDto, slugStore?: string) => {
     const formData = new FormData();
     formData.append('name', productData.name);
     formData.append('shortDescription', productData.shortDescription);
@@ -25,7 +26,7 @@ export const productsApi = {
       formData.append('images', image);
     });
 
-    const { data } = await apiClient.post<ApiResponse<Product>>('/products', formData, {
+    const { data } = await apiClient.post<ApiResponse<Product>>(`/${slugStore}/products`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -34,7 +35,7 @@ export const productsApi = {
   },
 
   // ⭐ CORRECTION ICI
-  update: async (id: string, productData: Partial<Product> & { newImages?: File[]; imagesToDelete?: string[] }) => {
+  update: async (id: string, productData: Partial<Product> & { newImages?: File[]; imagesToDelete?: string[] }, slugStore?: string,) => {
     const formData = new FormData();
 
     // Ajouter les champs texte
@@ -54,44 +55,41 @@ export const productsApi = {
     if (productData.imagesToDelete && productData.imagesToDelete.length > 0) {
       formData.append('imagesToDelete', JSON.stringify(productData.imagesToDelete));
     }
-    formData.forEach((value, key) => {
-      console.log(`FormData - ${key}:`, value);
-    });
 
-    const { data } = await apiClient.patch<ApiResponse<Product>>(`/products/${id}`, formData, {
+    const { data } = await apiClient.patch<ApiResponse<Product>>(`/${slugStore}/products/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
 
-    // ✅ CHANGEMENT: Retourner data.data (le produit) comme create()
+    //CHANGEMENT: Retourner data.data (le produit) comme create()
     // Cela permet aux hooks de recevoir directement le produit
     return data.data;
   },
 
-  delete: async (id: string) => {
-    await apiClient.delete(`/products/${id}`);
+  delete: async (id: string, slugStore?: string) => {
+    await apiClient.delete(`/${slugStore}/products/${id}`);
   },
 
   // Variantes
-  addVariant: async (variant: CreateVariantDto) => {
+  addVariant: async (variant: CreateVariantDto, slugStore?: string) => {
     const { productId, ...variantData } = variant;
     const { data } = await apiClient.post<ApiResponse<ProductVariant>>(
-      `/product-variants/${productId}/variants`,
+      `/${slugStore}/product-variants/${productId}/variants`,
       variantData
     );
     return data.data;
   },
 
-  updateVariant: async (id: string, variant: Partial<ProductVariant>) => {
+  updateVariant: async (idVariante: string, productId: string, variant: Partial<ProductVariant>, slugStore?: string) => {
     const { data } = await apiClient.patch<ApiResponse<ProductVariant>>(
-      `/product-variants/${id}`,
+      `/${slugStore}/product-variants/${productId}/variants/${idVariante}`,
       variant
     );
     return data.data;
   },
 
-  deleteVariant: async (id: string) => {
-    await apiClient.delete(`/product-variants/${id}`);
+  deleteVariant: async (id: string, productId: string, slugStore?: string) => {
+    await apiClient.delete(`/${slugStore}/product-variants/${productId}/variants/${id}`);
   },
 };

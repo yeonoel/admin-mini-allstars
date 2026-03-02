@@ -25,8 +25,7 @@ export function OrderCard({ order, onStatusChange, onWhatsApp, isUpdating = fals
      * @return {boolean} true if the order can be updated, false otherwise
      */
     const canBeUpdate = (current: OrderStatus) => {
-        if (current === OrderStatus.PENDING_PAYMENT) return true;
-        if (current === OrderStatus.PAYMENT_FAILED) return true;
+        if (current === OrderStatus.CONFIRMED_BY_CLIENT) return true;
         if (current === OrderStatus.DELIVERED) return true;
         if (current === OrderStatus.CANCELLED) return true;
         return false;
@@ -39,7 +38,9 @@ export function OrderCard({ order, onStatusChange, onWhatsApp, isUpdating = fals
      * @return {boolean} true if the order can be changed, false otherwise
      */
     const canChangeTo = (current: OrderStatus, newStatus: OrderStatus) => {
-        if (current === OrderStatus.CONFIRMED && newStatus === OrderStatus.CANCELLED) return true;
+        if (current === OrderStatus.CONFIRMED_BY_CLIENT && newStatus === OrderStatus.CONFIRMED_BY_SELLER) return true;
+        if (current === OrderStatus.CONFIRMED_BY_SELLER && newStatus === OrderStatus.CANCELLED) return true;
+        if (current === OrderStatus.CONFIRMED_BY_SELLER && newStatus === OrderStatus.DELIVERED) return true;
         if (current === newStatus) return true;
         return false;
     };
@@ -59,8 +60,8 @@ export function OrderCard({ order, onStatusChange, onWhatsApp, isUpdating = fals
                                 {formatDate(order.createdAt)}
                             </div>
                         </div>
-                        <Badge className={statusConfig[order.status].color}>
-                            {statusConfig[order.status].label}
+                        <Badge className={statusConfig[order.status]?.color}>
+                            {statusConfig[order.status]?.label}
                         </Badge>
                     </div>
 
@@ -169,10 +170,10 @@ export function OrderCard({ order, onStatusChange, onWhatsApp, isUpdating = fals
                             canBeUpdate(order.status) ? (
                                 <Select
                                     onValueChange={(value: OrderStatus) => onStatusChange?.(order.id, value)}
-                                    disabled={true}
+                                    disabled={false}
                                 >
-                                    <SelectTrigger className={`flex-1 ${statusConfig[order.status].color} border-0`}>
-                                        <SelectValue placeholder={statusConfig[order.status].label} />
+                                    <SelectTrigger className={`flex-1 ${statusConfig[order.status]?.color} border-0`}>
+                                        <SelectValue placeholder={statusConfig[order.status]?.label} />
                                     </SelectTrigger>
                                 </Select>
                             ) : (
@@ -180,7 +181,7 @@ export function OrderCard({ order, onStatusChange, onWhatsApp, isUpdating = fals
                                     onValueChange={(value: OrderStatus) => onStatusChange?.(order.id, value)}
                                     disabled={isUpdating}
                                 >
-                                    <SelectTrigger className={`flex-1 ${statusConfig[order.status].color} border-0`}>
+                                    <SelectTrigger className={`flex-1 ${statusConfig[order.status]?.color} border-0`}>
                                         <SelectValue placeholder="Modifier de statut" />
                                     </SelectTrigger>
                                     <SelectContent>

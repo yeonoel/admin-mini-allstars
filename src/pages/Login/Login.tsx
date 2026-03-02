@@ -3,8 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../hooks/useAuth";
 import { Input } from "../../components/common/Input/Input";
 import { Button } from "../../components/common/Button/Button";
-import { Lock, Mail, Star } from "lucide-react";
+import { Lock, Phone, Star } from "lucide-react";
 import { loginSchema, type LoginFormData } from "./login.schema";
+import { normalizePhone } from "@/lib/utils";
 
 export default function Login() {
     const { login, loading, error } = useAuth();
@@ -15,7 +16,10 @@ export default function Login() {
     });
 
     const onSubmit = async (data: LoginFormData) => {
-        await login(data.email, data.password);
+        console.log(data.numero, "data.numero");
+        const normalizedPhone = normalizePhone(data.numero);
+        console.log(normalizedPhone, "normalizedPhone");
+        await login(normalizedPhone, data.password);
     };
 
     return (
@@ -31,16 +35,16 @@ export default function Login() {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
                     <Input
-                        label="Email"
-                        type="email"
-                        placeholder="admin@allstart.com"
-                        icon={<Mail className="w-4 h-4" />}
-                        {...register("email")}
-                        error={errors.email?.message}
+                        label="Numéro"
+                        type="tel"
+                        placeholder="0707070707"
+                        icon={<Phone className="w-4 h-4" />}
+                        {...register("numero")}
+                        error={errors.numero?.message}
                     />
 
                     <Input
-                        label="Password"
+                        label="Mot de passe"
                         type="password"
                         placeholder="*******"
                         icon={<Lock className="w-4 h-4" />}

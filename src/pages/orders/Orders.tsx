@@ -13,7 +13,7 @@ import { useStatusChangeConfirm } from "@/hooks/useStatusChangeConfrme";
 import { OrdersError } from "@/components/features/Order/OrderErrror";
 import { OrdersListSkeleton } from "@/components/features/Order/OrderSkeleton";
 import { OrdersEmpty } from "@/components/features/Order/OrdersEmpty";
-import { formatPrice } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/utils";
 import { OrderStatus } from "@/types/order-status";
 
 export function Orders() {
@@ -134,15 +134,16 @@ export function Orders() {
      * @return {boolean} true if the order can be updated, false otherwise
      */
     const canBeUpdate = (current: OrderStatus) => {
-        if (current === OrderStatus.PENDING_PAYMENT) return true;
-        if (current === OrderStatus.PAYMENT_FAILED) return true;
+        if (current === OrderStatus.CONFIRMED_BY_CLIENT) return true;
         if (current === OrderStatus.DELIVERED) return true;
         if (current === OrderStatus.CANCELLED) return true;
         return false;
     };
 
     const canChangeTo = (current: OrderStatus, newStatus: OrderStatus) => {
-        if (current === OrderStatus.CONFIRMED && newStatus === OrderStatus.CANCELLED) return true;
+        if (current === OrderStatus.CONFIRMED_BY_CLIENT && newStatus === OrderStatus.CONFIRMED_BY_SELLER) return true;
+        if (current === OrderStatus.CONFIRMED_BY_SELLER && newStatus === OrderStatus.CANCELLED) return true;
+        if (current === OrderStatus.CONFIRMED_BY_SELLER && newStatus === OrderStatus.DELIVERED) return true;
         if (current === newStatus) return true;
         return false;
     };
@@ -161,14 +162,6 @@ export function Orders() {
         newStatus: OrderStatus
     ) => {
         requestStatusChange(orderId, orderNumber, currentStatus, newStatus);
-    };
-
-    const formatDate = (date: string) => {
-        return new Date(date).toLocaleDateString('fr-FR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
     };
 
     // ========== RENDER ==========
@@ -401,8 +394,8 @@ export function Orders() {
                                             {/* Statut */}
                                             <td className="px-4 py-4">
                                                 <div className="flex flex-col items-center gap-2">
-                                                    <Badge className={`${statusConfig[order.status].color}`}>
-                                                        {statusConfig[order.status].label}
+                                                    <Badge className={`${statusConfig[order.status]?.color}`}>
+                                                        {statusConfig[order.status]?.label}
                                                     </Badge>
                                                     {!canBeUpdate(order.status) && (
                                                         <Select

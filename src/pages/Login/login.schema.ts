@@ -1,7 +1,7 @@
 import * as yup from "yup";
 
 export const loginSchema = yup.object({
-    email: yup.string().email("Invalid email").required("Obligatoire"),
+    numero: yup.string().matches(/^[0-9+]+$/, "Numéro invalide").min(10, "Numéro trop court").required("Obligatoire"),
     password: yup.string().min(6, "Trop court").required("Obligatoire"),
 });
 

@@ -8,15 +8,12 @@ interface LoginResponse {
     data: User
 }
 
-export const loginApi = async (email: string, password: string): Promise<LoginResponse> => {
-    console.log('API_URL', API_URL);
-    console.log('loginApi', email, password);
+export const loginApi = async (phone: string, password: string): Promise<LoginResponse> => {
+    console.log(phone, password);
     const data = await apiFetch(`${API_URL}/auth/login`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password }),
     });
     return data;
 }

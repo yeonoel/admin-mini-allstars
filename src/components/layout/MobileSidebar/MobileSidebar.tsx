@@ -9,7 +9,8 @@ interface MobileSidebarProps {
 
 export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
     if (!open) return null;
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
+    const slugStore = user?.slugStore ?? "Panel Vendeur";
     const handleLogout = () => {
         logout();
     }
@@ -31,22 +32,22 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                         <span className="w-7 h-7 bg-black text-white flex items-center justify-center rounded-full">
                             <Star size={15} />
                         </span>
-                        Admin Panel
+                        {slugStore}
                     </h1>
                     <span onClick={onClose}><ArrowLeftToLine size={16} strokeWidth={1.75} /></span>
                 </div>
                 <nav className="space-y-2">
-                    <NavLink to="/" className={linkClass} onClick={onClose}>
+                    <NavLink to={`/dashboard/${slugStore}`} className={linkClass}>
                         <PanelsTopLeft className="w-3.5 h-3.5" />
-                        <span>Tableau de bord </span>
+                        <span>Tableau de bord</span>
                     </NavLink>
 
-                    <NavLink to="/commandes" className={linkClass} onClick={onClose}>
+                    <NavLink to={`/dashboard/${slugStore}/commandes`} className={linkClass}>
                         <ShoppingCart className="w-3.5 h-3.5" />
                         <span>Commandes</span>
                     </NavLink>
 
-                    <NavLink to="/produits" className={linkClass} onClick={onClose}>
+                    <NavLink to={`/dashboard/${slugStore}/produits`} className={linkClass}>
                         <ShoppingBasket className="w-3.5 h-3.5" />
                         <span>Produits</span>
                     </NavLink>

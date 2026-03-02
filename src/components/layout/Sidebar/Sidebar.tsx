@@ -1,9 +1,11 @@
-import { LogOut, PanelsTopLeft, ShoppingBasket, ShoppingCart, SlidersHorizontal, Star, Users } from "lucide-react";
+import { LogOut, PanelsTopLeft, ShoppingBasket, ShoppingCart, Star } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 
 export function Sidebar() {
     const { logout } = useAuth();
+    const { user } = useAuth();
+    const slugStore = user?.slugStore ?? "Panel Vendeur";
     const handleLogout = () => {
         logout();
     }
@@ -17,23 +19,23 @@ export function Sidebar() {
                     <span className="w-7 h-7 bg-black text-white flex items-center justify-center rounded-full">
                         <Star size={15} />
                     </span>
-                    Admin Panel
+                    {slugStore}
                 </h1>
             </div>
 
             {/* Navigation */}
             <nav className="space-y-2">
-                <NavLink to="/" className={linkClass}>
+                <NavLink to={`/dashboard/${slugStore}`} className={linkClass}>
                     <PanelsTopLeft className="w-3.5 h-3.5" />
                     <span>Tableau de bord</span>
                 </NavLink>
 
-                <NavLink to="/commandes" className={linkClass}>
+                <NavLink to={`/dashboard/${slugStore}/commandes`} className={linkClass}>
                     <ShoppingCart className="w-3.5 h-3.5" />
                     <span>Commandes</span>
                 </NavLink>
 
-                <NavLink to="/produits" className={linkClass}>
+                <NavLink to={`/dashboard/${slugStore}/produits`} className={linkClass}>
                     <ShoppingBasket className="w-3.5 h-3.5" />
                     <span>Produits</span>
                 </NavLink>
