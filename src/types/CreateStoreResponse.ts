@@ -6,6 +6,7 @@ export interface CreateStoreResponse {
             id: string;
             name: string;
             slug: string;
+            logoUrl: string;
         };
         user: {
             id: string;

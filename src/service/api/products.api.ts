@@ -11,7 +11,7 @@ export const productsApi = {
 
   getById: async (id: string, slugStore?: string) => {
     const { data } = await apiClient.get<ApiResponse<Product>>(`/${slugStore}/products/${id}`);
-    return data.data; // OK - pour un produit unique
+    return data.data;
   },
 
   create: async (productData: CreateProductDto, slugStore?: string) => {
@@ -31,10 +31,9 @@ export const productsApi = {
         'Content-Type': 'multipart/form-data',
       },
     });
-    return data.data; // OK - retourne juste le produit créé
+    return data.data;
   },
 
-  // ⭐ CORRECTION ICI
   update: async (id: string, productData: Partial<Product> & { newImages?: File[]; imagesToDelete?: string[] }, slugStore?: string,) => {
     const formData = new FormData();
 

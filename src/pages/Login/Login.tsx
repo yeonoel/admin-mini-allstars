@@ -31,7 +31,7 @@ export default function Login() {
                 >
                     ← Accueil
                 </Link>
-                <div className="w-85 max-w-md bg-white p-8 rounded-2xl shadow">
+                <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow">
                     <div className="flex flex-col items-center justify-center space-y-5">
                         <span className="w-14 h-14 bg-black text-white flex items-center justify-center  rounded-full">
                             <Star size={15} />

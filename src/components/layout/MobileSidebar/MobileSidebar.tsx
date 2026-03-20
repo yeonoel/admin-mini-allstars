@@ -1,4 +1,4 @@
-import { ArrowLeftToLine, ChartColumn, LogOut, PanelsTopLeft, ShoppingBasket, ShoppingCart, SlidersHorizontal, Star, Users } from "lucide-react";
+import { ArrowLeftToLine, ChartColumn, LogOut, PanelsTopLeft, ShoppingBasket, ShoppingCart, SlidersHorizontal, Star, Store, Users } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 
@@ -58,6 +58,10 @@ export function MobileSidebar({ open, onClose }: MobileSidebarProps) {
                     <NavLink to={`/dashboard/${slugStore}/produits`} className={linkClass}>
                         <ShoppingBasket className="w-3.5 h-3.5" />
                         <span>Produits</span>
+                    </NavLink>
+                    <NavLink to={`/dashboard/${slugStore}/boutique`} className={linkClass}>
+                        <Store className="w-3.5 h-3.5" />
+                        <span>Ma boutique</span>
                     </NavLink>
                 </nav>
                 <div className="border-t border-border p-2 mt-auto">

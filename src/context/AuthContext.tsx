@@ -75,6 +75,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         localStorage.removeItem('user');
     };
 
+    const updateUser = (partial: Partial<AuthUser>) => {
+        const updated = { ...user, ...partial } as AuthUser;
+        setUser(updated);
+        localStorage.setItem("user", JSON.stringify(updated));
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -84,7 +90,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 loading,
                 error,
                 login,
-                logout
+                logout,
+                updateUser
             }}
         >
             {children}

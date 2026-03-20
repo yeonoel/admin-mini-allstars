@@ -15,10 +15,9 @@ const pageTitles: Record<string, string> = {
 export function Header({ onMenuClick }: HeaderProps) {
     const { user } = useAuth();
     const firstletterFistName = user?.firstName.charAt(0).toUpperCase();
-    const firstletterLastName = user?.lastName.charAt(0).toUpperCase();
+    const firstletterLastName = user?.lastName?.charAt(0).toUpperCase();
     const firstName = user?.firstName || "Admin";
-    const lastName = user?.lastName || "User";
-    const email = user?.email || "adminemail@com";
+    const phone = user?.phone || "";
     const location = useLocation();
 
     const title = pageTitles[location.pathname] || "overview";
@@ -35,8 +34,8 @@ export function Header({ onMenuClick }: HeaderProps) {
                 {/* RIGHT */}
                 <div className="flex items-center gap-4 ">
                     <div className="text-right cursor-pointer">
-                        <p className="text-sm font-medium">{firstName} {lastName}</p>
-                        <p className="text-xs text-gray-500">{email}</p>
+                        <p className="text-sm font-medium">{firstName}</p>
+                        <p className="text-xs text-gray-500">{phone}</p>
                     </div>
 
                     <div className="cursor-pointer w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-semibold">

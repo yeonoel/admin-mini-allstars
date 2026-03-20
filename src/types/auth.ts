@@ -7,7 +7,7 @@ export interface AuthUser {
   role?: UserRole;
   slugStore?: string;
   logoStore?: string,
-
+  phone?: string
 }
 
 export interface AuthContextType {
@@ -18,4 +18,5 @@ export interface AuthContextType {
   error: string | null;
   login: (token: string, password: string) => void;
   logout: () => void;
+  updateUser: (partial: Partial<AuthUser>) => void;
 }

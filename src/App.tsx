@@ -12,6 +12,7 @@ import Products from "./pages/products/Products"
 import RootRedirect from "./components/layout/RootRedirection/RootRedirect"
 import RegisterPage from "./pages/register/registerPage"
 import LandingPage from "./pages/ladingPage/LadingPage"
+import StorePage from "./pages/storePage/storePage"
 
 const queryClient = new QueryClient();
 function App() {
@@ -31,6 +32,7 @@ function App() {
                   <Route path="overview" element={<Overview />} />
                   <Route path="commandes" element={<Orders />} />
                   <Route path="produits" element={<Products />} />
+                  <Route path="boutique" element={<StorePage />} />
                 </Route>
               </Route>
               <Route path="*" element={<RootRedirect />} />
