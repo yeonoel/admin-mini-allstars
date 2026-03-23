@@ -25,6 +25,7 @@ import type { Product, ProductVariant } from '@/types/product.types';
 import { formatPrice } from '@/lib/utils';
 import { CopyButton } from '@/components/common/copirUrl/CopieUrl';
 import { getStoreUrl, STOREFRONT_URL } from '@/config';
+import { useStore } from '@/hooks/useStore';
 
 export function ProductsPage() {
     // États pour les dialogs
@@ -46,7 +47,8 @@ export function ProductsPage() {
     const deleteProduct = useDeleteProduct();
     const deleteVariant = useDeleteVariant();
 
-
+    const { data: store, } = useStore();
+    const storefrontUrl = getStoreUrl(store?.slug ?? "");
     // Filtrage des produits par recherche (côté front)
     const filteredProducts = useMemo(() => {
         if (!data?.data) return [];
@@ -230,6 +232,10 @@ export function ProductsPage() {
                                                 {product.variants.length}
                                             </Badge>
                                         </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <CopyButton text={`${storefrontUrl}/product/${product.slug}`} />
                                     </div>
                                 </div>
 
@@ -432,8 +438,7 @@ export function ProductsPage() {
                                             >
                                                 <Trash2 className="w-4 h-4 text-red-600" />
                                             </Button>
-                                            <CopyButton text={`${STOREFRONT_URL}/${product.slug}`} />
-
+                                            <CopyButton text={`${storefrontUrl}/produit/${product.slug}`} />
                                         </div>
                                     </td>
                                 </tr>

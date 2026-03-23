@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
     ExternalLink, Pencil, X, Store, Phone,
-    FileText, Image, Loader2, Copy, Check
+    FileText, Image, Loader2
 } from "lucide-react";
 import { useStore, useUpdateStore } from "@/hooks/useStore";
 import { isValidCIPhone } from "@/lib/utils";
