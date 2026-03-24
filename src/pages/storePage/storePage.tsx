@@ -12,6 +12,7 @@ import { getStoreUrl } from "@/config";
 import { CopyButton } from "@/components/common/copirUrl/CopieUrl";
 
 
+
 const schema = yup.object({
     name: yup.string().min(2, "Minimum 2 caractères").required("Nom requis"),
     whatsappNumber: yup
