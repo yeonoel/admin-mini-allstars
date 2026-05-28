@@ -1,19 +1,19 @@
-
-import type { DashboardStatsDto } from '@/types/dashboard.types';
-import apiClient from './clients';
-import type { ProductStats } from '@/types/product.types';
+import type { DashboardStatsDto } from "@/types/dashboard.types";
+import apiClient from "./clients";
+import type { ProductStats } from "@/types/product.types";
 
 export const dashboardApi = {
   getOverviewStats: async (slugStore: string): Promise<DashboardStatsDto> => {
-    const { data } = await apiClient.get<DashboardStatsDto>(`/dashboard/${slugStore}/products/stats`);
-    console.log("dashboardApi.getOverviewStats", data);
+    const { data } = await apiClient.get<DashboardStatsDto>(
+      `/dashboard/${slugStore}/products/stats`,
+    );
     return data;
   },
 
   getProductsStats: async (slugStore: string): Promise<ProductStats> => {
-    const { data } = await apiClient.get<ProductStats>(`dashboard/${slugStore}/products/stats`);
+    const { data } = await apiClient.get<ProductStats>(
+      `dashboard/${slugStore}/products/stats`,
+    );
     return data;
-  }
+  },
 };
-
-
